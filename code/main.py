@@ -26,6 +26,6 @@ class Main:
             self.level.draw()
 
             pygame.display.update()
-            self.clock.tick()
+            self.clock.tick(60)
 
 Main().update()
