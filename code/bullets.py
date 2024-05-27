@@ -12,6 +12,6 @@ class PlayerBullet(Sprite):
     def update(self):
         super().update()
         self.rect.topleft += self.velocity
-        for sprite in self.level.terrain_sprites:
+        for sprite in self.level.sprites["terrain"]:
             if self.rect.colliderect(sprite.rect):
                 self.kill()

@@ -4,16 +4,24 @@ from support import *
 from sprites import *
 from player import *
 from enemies import *
+from enemy_spawner import *
 from groups import AllSprites
 from os.path import join
 
 class Level:
     def __init__(self):
-        self.player_sprites = AllSprites(self)
-        self.terrain_sprites = AllSprites(self)
-        self.enemy_sprites = AllSprites(self)
-        self.player_bullets = AllSprites(self)
-        self.decor_sprites = AllSprites(self)
+        self.level_background = import_image("images/background")
+
+        self.sprites = {
+            "player": AllSprites(self),
+            "terrain": AllSprites(self),
+            "enemies": AllSprites(self),
+            "spawn_points": AllSprites(self),
+            "player_bullets": AllSprites(self),
+            "decor": AllSprites(self)
+        }
+
+        self.enemy_spawner = EnemySpawner(self)
 
         self.map = pytmx.load_pygame(join('level.tmx'))
         self.setup()
@@ -23,30 +31,32 @@ class Level:
         self.player = Player(
             level = self,
             pos = (900, 900),
-            groups = self.player_sprites,
+            groups = self.sprites["player"],
         )
 
         self.enemy = Enemy(
             level = self,
             pos = (1200, 1200),
-            groups = self.enemy_sprites
+            groups = self.sprites["enemies"]
         )
 
-        # UI
         font = pygame.font.Font('slkscr.ttf', 30)
         self.start_text = font.render('Press Space to Start', False, (235, 220, 220))
         self.logo = import_image('images', 'logo')
         self.logo = pygame.transform.scale_by(self.logo, 5)
 
-        # state
         self.game_state = 'menu'
 
     def update(self):
         self.apply_scroll()
         if self.game_state == 'game':
-            self.player_bullets.update()
-            self.player_sprites.update()
-            self.enemy_sprites.update()
+            self.enemy_spawner.update()
+
+            self.sprites["enemies"].update()
+            self.sprites["spawn_points"].update()
+            self.sprites["player"].update()
+            self.sprites["enemies"].update()
+            self.sprites["player_bullets"].update()
 
             if pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 self.game_state = 'menu'
@@ -54,16 +64,28 @@ class Level:
 
     def setup(self):
         for x, y, image in self.map.get_layer_by_name('Terrain').tiles():
-            Sprite((x * tile_size, y * tile_size), image, self.terrain_sprites)
+            Sprite((x * tile_size, y * tile_size), image, self.sprites["terrain"])
         for x, y, image in self.map.get_layer_by_name('Decor').tiles():
-            Sprite((x * tile_size, y * tile_size), image, self.decor_sprites)
+            Sprite((x * tile_size, y * tile_size), image, self.sprites["decor"])
+
+        for sprite in self.sprites["terrain"]:
+            self.level_background.blit(
+                pygame.transform.flip(pygame.transform.scale_by(sprite.image, SCALE), sprite.flip, False),
+                sprite.rect.topleft
+            )
+        for sprite in self.sprites["decor"]:
+            self.level_background.blit(
+                pygame.transform.flip(pygame.transform.scale_by(sprite.image, SCALE), sprite.flip, False),
+                sprite.rect.topleft
+            )
 
     def draw(self):
-        self.player_bullets.draw()
-        self.player_sprites.draw()
-        self.enemy_sprites.draw()
-        self.terrain_sprites.draw()
-        self.decor_sprites.draw()
+        pygame.display.get_surface().blit(self.level_background, -self.scroll)
+        self.sprites["enemies"].draw()
+        self.sprites["spawn_points"].draw()
+        self.sprites["player_bullets"].draw()
+        self.sprites["player"].draw()
+        self.sprites["enemies"].draw()
 
         if self.game_state == 'menu':
             pygame.display.get_surface().fill((16, 20, 31))

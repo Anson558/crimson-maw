@@ -10,7 +10,6 @@ class Player(PhysicsSprite):
             'run': Animation(import_folder('images', 'entities', 'player', 'run'), 6)
         }
         super().__init__(self.level, pos, self.animations['idle'].image, groups)
-        self.enemy_sprites = self.level.enemy_sprites
         self.hitbox_rect = self.rect.inflate(-SCALE * 5, -SCALE * 4)
 
         self.shoot_timer = 0
@@ -30,6 +29,8 @@ class Player(PhysicsSprite):
         else:
             self.velocity.x = 0
 
+        print(self.velocity)
+
         if keys[pygame.K_w]:
             self.velocity.y = -1
         elif keys[pygame.K_s]:
@@ -40,13 +41,15 @@ class Player(PhysicsSprite):
         if mouse[0]:
             if self.shoot_timer > self.shoot_cooldown:
                 self.shoot_timer = 0
-                PlayerBullet(self.level, self.rect.center, self.level.player_bullets)
+                PlayerBullet(self.level, self.rect.center, self.level.sprites["player_bullets"])
 
     def check_death(self):
-        for sprite in self.enemy_sprites:
+        for sprite in self.level.sprites['enemies']:
             if self.hitbox_rect.colliderect(sprite.hitbox_rect):
                 self.rect.topleft = self.default_pos
                 self.hitbox_rect.topleft = self.default_pos
+                self.level.sprites['enemies'].empty()
+                self.level.sprites['spawn_points'].empty()
                 self.level.game_state = 'menu'
                 
         
@@ -59,6 +62,7 @@ class Player(PhysicsSprite):
             self.image = self.animations['run'].image
 
     def update(self):
+        print(self.rect.topleft)
         self.input()
         self.animate()
         self.check_death()

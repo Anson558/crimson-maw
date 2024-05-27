@@ -18,10 +18,10 @@ class Sprite(pygame.sprite.Sprite):
 class PhysicsSprite(Sprite):
     def __init__(self, level, pos, image, groups):
         super().__init__(pos, image, groups)
-        self.terrain_sprites = level.terrain_sprites
+        self.terrain_sprites = level.sprites["terrain"]
         self.hitbox_rect = self.rect
         self.velocity = vector(0, 0)
-        self.speed = 5
+        self.speed = 4
 
     def move(self):
         if self.velocity != pygame.math.Vector2(0, 0):
@@ -36,7 +36,7 @@ class PhysicsSprite(Sprite):
 
         self.rect.center = self.hitbox_rect.center
 
-    def collide(self, axis : str):
+    def collide(self, axis):
         for sprite in self.terrain_sprites:
             if self.hitbox_rect.colliderect(sprite.rect):
                 if axis == 'horizontal':
