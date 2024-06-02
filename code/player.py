@@ -13,7 +13,7 @@ class Player(PhysicsSprite):
         self.hitbox_rect = self.rect.inflate(-SCALE * 5, -SCALE * 4)
 
         self.shoot_timer = 0
-        self.shoot_cooldown = 10
+        self.shoot_cooldown = 13
 
     def input(self):
         self.shoot_timer += 1
@@ -44,13 +44,14 @@ class Player(PhysicsSprite):
                 PlayerBullet(self.level, self.rect.center, self.level.sprites["player_bullets"])
 
     def check_death(self):
-        for sprite in self.level.sprites['enemies']:
-            if self.hitbox_rect.colliderect(sprite.hitbox_rect):
-                self.rect.topleft = self.default_pos
-                self.hitbox_rect.topleft = self.default_pos
-                self.level.sprites['enemies'].empty()
-                self.level.sprites['spawn_points'].empty()
-                self.level.game_state = 'menu'
+        for enemy_types in [self.level.sprites['enemies'], self.level.sprites['enemy_bullets']]:
+            for enemy_type in enemy_types:
+                if self.hitbox_rect.colliderect(enemy_type.hitbox_rect):
+                    self.rect.topleft = self.default_pos
+                    self.hitbox_rect.topleft = self.default_pos
+                    self.level.sprites['enemies'].empty()
+                    self.level.sprites['spawn_points'].empty()
+                    self.level.game_state = 'menu'
                 
         
     def animate(self):

@@ -18,6 +18,7 @@ class Level:
             "enemies": AllSprites(self),
             "spawn_points": AllSprites(self),
             "player_bullets": AllSprites(self),
+            "enemy_bullets": AllSprites(self),
             "decor": AllSprites(self)
         }
 
@@ -32,12 +33,6 @@ class Level:
             level = self,
             pos = (900, 900),
             groups = self.sprites["player"],
-        )
-
-        self.enemy = Enemy(
-            level = self,
-            pos = (1200, 1200),
-            groups = self.sprites["enemies"]
         )
 
         font = pygame.font.Font('slkscr.ttf', 30)
@@ -57,6 +52,7 @@ class Level:
             self.sprites["player"].update()
             self.sprites["enemies"].update()
             self.sprites["player_bullets"].update()
+            self.sprites["enemy_bullets"].update()
 
             if pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 self.game_state = 'menu'
@@ -84,6 +80,7 @@ class Level:
         self.sprites["enemies"].draw()
         self.sprites["spawn_points"].draw()
         self.sprites["player_bullets"].draw()
+        self.sprites["enemy_bullets"].draw()
         self.sprites["player"].draw()
         self.sprites["enemies"].draw()
 

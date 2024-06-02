@@ -8,6 +8,7 @@ class Sprite(pygame.sprite.Sprite):
         self.image = image
         self.default_pos = pos
         self.rect = pygame.FRect(pos[0], pos[1], self.image.get_width() * SCALE, self.image.get_height() * SCALE)
+        self.hitbox_rect = self.rect
         self.flip = False
 
     def get_direction_to_target(self, target : pygame.math.Vector2):
@@ -19,7 +20,6 @@ class PhysicsSprite(Sprite):
     def __init__(self, level, pos, image, groups):
         super().__init__(pos, image, groups)
         self.terrain_sprites = level.sprites["terrain"]
-        self.hitbox_rect = self.rect
         self.velocity = vector(0, 0)
         self.speed = 4
 
