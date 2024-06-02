@@ -12,6 +12,15 @@ class Level:
     def __init__(self):
         self.level_background = import_image("images/background")
 
+        self.assets = {
+            'player_idle': import_folder('images', 'entities', 'player', 'idle'),
+            'player_run': import_folder('images', 'entities', 'player', 'run'),
+            'basic_enemy': import_folder('images', 'entities', 'enemies', 'basic'),
+            'shooting_enemy': import_folder('images', 'entities', 'enemies', 'shooter'),
+            'player_bullet': import_image('images', 'entities', 'player_bullet'),
+            'enemy_bullet': import_image('images', 'entities', 'enemy_bullet')
+        }
+
         self.sprites = {
             "player": AllSprites(self),
             "terrain": AllSprites(self),

@@ -6,7 +6,7 @@ from bullets import *
 class Enemy(PhysicsSprite):
     def __init__(self, level, pos, groups):
         self.level = level
-        self.animation = Animation(import_folder('images', 'entities', 'enemies', 'basic'), 14)
+        self.animation = Animation(self.level.assets['basic_enemy'], 14)
         self.image = self.animation.image
         super().__init__(level, pos, self.image, groups)
         self.speed = 1
@@ -52,7 +52,7 @@ class ShootingEnemy(Enemy):
     def __init__(self, level, pos, groups):
         self.level = level
         super().__init__(self.level, pos, groups)
-        self.animation = Animation(import_folder('images', 'entities', 'enemies', 'shooter'), 14)
+        self.animation = Animation(self.level.assets['shooting_enemy'], 14)
         self.time_since_shot = 0
         self.shoot_cooldown = 50
         self.can_flip = False

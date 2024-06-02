@@ -6,8 +6,8 @@ class Player(PhysicsSprite):
     def __init__(self, level, pos, groups):
         self.level = level
         self.animations = {
-            'idle': Animation(import_folder('images', 'entities', 'player', 'idle'), 20),
-            'run': Animation(import_folder('images', 'entities', 'player', 'run'), 6)
+            'idle': Animation(self.level.assets['player_idle'], 20),
+            'run': Animation(self.level.assets['player_run'], 6)
         }
         super().__init__(self.level, pos, self.animations['idle'].image, groups)
         self.hitbox_rect = self.rect.inflate(-SCALE * 5, -SCALE * 4)

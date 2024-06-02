@@ -15,6 +15,7 @@ class Main:
     def update(self):
         while True:
             self.clock.tick(60)
+            print(self.clock.get_fps())
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
